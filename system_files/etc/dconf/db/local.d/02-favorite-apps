@@ -1,0 +1,5 @@
+# Pinned apps for Dash to Panel (taskbar favorites)
+# NOTE: must be single line array for dconf build compatibility
+
+[org/gnome/shell]
+favorite-apps=['org.gnome.Nautilus.desktop','org.mozilla.firefox.desktop','libreoffice-writer.desktop','libreoffice-calc.desktop','libreoffice-impress.desktop','libreoffice-draw.desktop','libreoffice-base.desktop','libreoffice-math.desktop','org.gnome.Calculator.desktop','org.gnome.TextEditor.desktop','org.gnome.Settings.desktop']

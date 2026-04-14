@@ -1,0 +1,8 @@
+[org/gnome/desktop/wm/preferences]
+button-layout='appmenu:minimize,maximize,close'
+
+[org/gnome/shell]
+enabled-extensions=['dash-to-panel@jderose9.github.com']
+
+[org.gnome.desktop.interface]
+enable-hot-corners=false
