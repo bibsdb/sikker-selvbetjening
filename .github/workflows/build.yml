@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+      - bartosz
+      - agnete
 
 env:
   IMAGE_DESC: "Sikker Selvbetjening Image"
