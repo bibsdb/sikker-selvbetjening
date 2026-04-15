@@ -6,6 +6,6 @@ panel-size=32
 show-apps-icon=false
 group-apps=true
 show-running-apps=true
-hide-overview-on-startup=true
 
-# hide-overview-on-startup setting isnt working for some reason
+# this key doesnt work on our version, but it's worth keeping for future reference
+hide-overview-on-startup=true

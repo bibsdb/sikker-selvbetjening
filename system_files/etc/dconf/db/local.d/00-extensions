@@ -1,13 +1,15 @@
 # settings copied from dconf dump after editing on test pc
 # to find more, run gsettings --help
 
+[org/gnome/shell]
+enabled-extensions=[
+'dash-to-panel@jderose9.github.com',
+'arcmenu@arcmenu.com'
+]
+
 # window buttons
 [org/gnome/desktop/wm/preferences]
 button-layout='appmenu:minimize,maximize,close'
-
-# dash-to-panel (windows-like taskbar)
-[org/gnome/shell]
-enabled-extensions=['dash-to-panel@jderose9.github.com']
 
 # accessibility
 [org/gnome/desktop/a11y]
