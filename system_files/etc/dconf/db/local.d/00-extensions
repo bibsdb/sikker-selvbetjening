@@ -1,11 +1,13 @@
 # settings copied from dconf dump after editing on test pc
 # to find more, run gsettings --help
 
+# dash-to-panel (windows-like taskbar)
 [org/gnome/shell]
-enabled-extensions=[
-'dash-to-panel@jderose9.github.com',
-'arcmenu@arcmenu.com'
-]
+enabled-extensions=['dash-to-panel@jderose9.github.com']
+
+# arcmenu (windows-like quick menu)
+[org/gnome/shell]
+enabled-extensions=['arcmenu@arcmenu.com']
 
 # window buttons
 [org/gnome/desktop/wm/preferences]
