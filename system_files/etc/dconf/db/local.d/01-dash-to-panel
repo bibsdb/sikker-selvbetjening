@@ -1,7 +1,11 @@
+# settings for dash-to-panel (taskbar)
+
 [org.gnome.shell.extensions.dash-to-panel]
 panel-position='BOTTOM'
 panel-size=32
-show-apps-icon=true
+show-apps-icon=false
 group-apps=true
 show-running-apps=true
 hide-overview-on-startup=true
+
+# hide-overview-on-startup setting isnt working for some reason
