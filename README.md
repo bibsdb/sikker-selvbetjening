@@ -18,7 +18,7 @@ The repository is structured so image customization happens in small shell steps
 - `build_files/`
 	- `build.sh` runs all numbered scripts in lexical order
 	- `10-packages.sh` installs packages and Danish language tooling
-	- `20-services.sh` enables `podman.socket`
+	- `20-services.sh` enables `podman.socket` and configures a `bootc` update-check timer
 	- `30-gnome-layout.sh` applies dconf defaults
 - `system_files/`
 	- Contains files copied into the image, including dconf defaults and locale config
@@ -70,6 +70,16 @@ File: `.github/workflows/build-disk.yml`
 	- S3 (optional)
 
 This gives a Danish-oriented default desktop experience out of the box.
+
+## bootc update checks
+
+The image includes a systemd timer that checks every 5 minutes and applies updates when available:
+
+- Timer: `bootc-update-check.timer`
+- Service: `bootc-update-check.service`
+- Command flow: `bootc upgrade --check && bootc upgrade --apply --soft-reboot=auto`
+
+When an update is detected, the system stages it and reboots so the new deployment is applied.
 
 ## Dependency updates
 
