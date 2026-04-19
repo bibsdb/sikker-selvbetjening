@@ -5,7 +5,7 @@ set -ouex pipefail
 # Create a systemd service that applies desktop background configuration from
 # /usr/share/sikker-selvbetjening/desktop.conf (provided by overlay OS layer).
 # The config file specifies an image file (background_image_file) with path
-# relative to /usr/share/sikker-selvbetjening/assets/.
+# relative to /usr/share/sikker-selvbetjening/.
 
 # Create the systemd service unit
 mkdir -p /usr/lib/systemd/system/
@@ -42,8 +42,15 @@ if [[ ! -f "$OVERLAY_CONF" ]]; then
 	exit 0
 fi
 
-# Source the config file to read background_image_file variable
-background_image=$(bash -c "source '$OVERLAY_CONF' 2>/dev/null && echo \"\$background_image_file\"" || echo "")
+# Parse only background_image_file from desktop.conf.
+# Do not source the file because other keys may use non-shell syntax.
+background_image=$(sed -nE 's/^[[:space:]]*background_image_file[[:space:]]*=[[:space:]]*//p' "$OVERLAY_CONF" | head -n1)
+
+# Trim optional surrounding single or double quotes.
+background_image=${background_image#\"}
+background_image=${background_image%\"}
+background_image=${background_image#\'}
+background_image=${background_image%\'}
 
 if [[ -z "$background_image" ]]; then
 	exit 0
