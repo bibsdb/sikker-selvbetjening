@@ -34,7 +34,7 @@ cat > /usr/libexec/sikker-selvbetjening-apply-background.sh << 'EOF'
 sleep 2
 
 OVERLAY_CONF="/usr/share/sikker-selvbetjening/desktop.conf"
-OVERLAY_ASSETS_DIR="/usr/share/sikker-selvbetjening/assets"
+OVERLAY_DIR="/usr/share/sikker-selvbetjening"
 SYSTEM_BG_DIR="/usr/share/backgrounds"
 
 # Only proceed if the overlay config exists
@@ -49,8 +49,8 @@ if [[ -z "$background_image" ]]; then
 	exit 0
 fi
 
-# Build the full path to the image file (relative to overlay assets dir)
-image_path="$OVERLAY_ASSETS_DIR/$background_image"
+# Build the full path to the image file (in the overlay directory alongside desktop.conf)
+image_path="$OVERLAY_DIR/$background_image"
 
 if [[ ! -f "$image_path" ]]; then
 	echo "Warning: Background image not found at $image_path"
