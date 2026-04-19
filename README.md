@@ -19,6 +19,7 @@ The repository is structured so image customization happens in small shell steps
 	- `build.sh` runs all numbered scripts in lexical order
 	- `10-packages.sh` installs packages and Danish language tooling
 	- `20-services.sh` enables `podman.socket` and configures a `bootc` update-check timer
+	- `25-desktop-background.sh` sets up background image support from overlay configuration
 	- `30-gnome-layout.sh` applies dconf defaults
 - `system_files/`
 	- Contains files copied into the image, including dconf defaults and locale config
@@ -80,6 +81,41 @@ The image includes a systemd timer that checks every 5 minutes and applies updat
 - Command flow: `bootc upgrade --check && bootc upgrade --apply --soft-reboot=auto`
 
 When an update is detected, the system stages it and reboots so the new deployment is applied.
+
+## Desktop background image
+
+The image includes support for applying a system-wide desktop background via GNOME dconf settings. Background configuration is provided by an overlay OS layer through:
+
+- **Config file**: `/usr/share/sikker-selvbetjening/desktop.conf`
+- **Assets directory**: `/usr/share/sikker-selvbetjening/assets/`
+
+### How to configure
+
+The overlay layer should provide:
+
+1. **`/usr/share/sikker-selvbetjening/desktop.conf`** with content:
+   ```
+   background_image_file=<relative-path-to-image>
+   ```
+
+2. **Image file** at `/usr/share/sikker-selvbetjening/assets/<image-filename>`
+
+### Example
+
+Overlay providing a background image:
+
+```
+/usr/share/sikker-selvbetjening/desktop.conf:
+  background_image_file=backgrounds/company-bg.png
+
+/usr/share/sikker-selvbetjening/assets/backgrounds/company-bg.png
+```
+
+At boot, the `sikker-selvbetjening-desktop-bg.service` will:
+- Read the config file
+- Copy the image to `/usr/share/backgrounds/`
+- Apply it as the GNOME desktop background for all users
+- Configure both light and dark color schemes
 
 ## Dependency updates
 
