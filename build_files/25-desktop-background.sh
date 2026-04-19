@@ -64,13 +64,8 @@ if [[ ! -f "$image_path" ]]; then
 	exit 0
 fi
 
-# Copy image to system backgrounds directory
-mkdir -p "$SYSTEM_BG_DIR"
-cp "$image_path" "$SYSTEM_BG_DIR/"
-
-# Get the filename for the dconf setting
-image_filename=$(basename "$background_image")
-system_image_path="$SYSTEM_BG_DIR/$image_filename"
+# Use the image path directly in dconf (no need to copy to read-only /usr/share/backgrounds/)
+system_image_path="$image_path"
 
 # Write the dconf setting for the desktop background
 mkdir -p /etc/dconf/db/local.d/
