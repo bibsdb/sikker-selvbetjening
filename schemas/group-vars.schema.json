@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./group-vars.schema.json",
+  "title": "Group Vars Overlay",
+  "description": "Root schema for group_vars overlay files. Each top-level section is validated by its own dedicated schema file.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "desktop": {
+      "$ref": "./sections/desktop.schema.json",
+      "description": "Desktop configuration section. Optional for targets that define desktop customizations."
+    },
+    "printer": {
+      "$ref": "./sections/printer.schema.json",
+      "description": "Printer configuration section. Optional for targets that do not use a printer."
+    },
+    "wifi": {
+      "$ref": "./sections/wifi.schema.json",
+      "description": "Wi-Fi configuration section. Optional for targets that do not define Wi-Fi settings."
+    }
+  }
+}

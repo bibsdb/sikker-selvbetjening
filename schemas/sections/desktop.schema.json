@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./sections/desktop.schema.json",
+  "title": "Desktop Section",
+  "description": "Schema for desktop customization settings used in group_vars overlay files.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "background_image_file": {
+      "type": "string",
+      "description": "Path to the desktop background image asset. The _file suffix makes this value a file reference that is copied from assets during overlay rendering.",
+      "pattern": "^assets/.+"
+    },
+    "shortcuts_in_menu": {
+      "type": "array",
+      "description": "List of application shortcut IDs shown in the desktop menu.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  }
+}
