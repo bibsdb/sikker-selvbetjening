@@ -12,8 +12,8 @@ mkdir -p /usr/lib/systemd/system/
 cat > /usr/lib/systemd/system/sikker-selvbetjening-desktop-bg.service << 'EOF'
 [Unit]
 Description=Apply desktop background from sikker-selvbetjening overlay configuration
-After=network-online.target dbus.service
-Wants=network-online.target
+After=graphical.target dbus.service
+Wants=graphical.target
 
 [Service]
 Type=oneshot
@@ -21,7 +21,7 @@ ExecStart=/usr/libexec/sikker-selvbetjening-apply-background.sh
 RemainAfterExit=yes
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=graphical.target
 EOF
 
 # Create the helper script that applies the background at boot time
