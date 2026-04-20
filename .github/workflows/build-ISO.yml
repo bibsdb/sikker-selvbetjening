@@ -11,7 +11,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y curl xorriso genisoimage
+          sudo apt install -y curl xorriso genisoimage lorax
 
       - name: Download Fedora installer ISO
         run: |
@@ -34,10 +34,10 @@ jobs:
           %end
           EOF
 
-      - name: Create placeholder custom ISO
+      - name: Build custom installer ISO
         run: |
-          mkdir output
-          cp fedora.iso output/sikker-selvbetjening-installer.iso
+          mkdir -p output
+          mkksiso library.ks fedora.iso output/sikker-selvbetjening-installer.iso
 
       - name: Upload ISO
         uses: actions/upload-artifact@v4
