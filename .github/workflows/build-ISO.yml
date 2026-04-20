@@ -1,4 +1,4 @@
-name: Build Installer ISO
+name: Build Silverblue Installer ISO
 
 on:
   workflow_dispatch:
@@ -8,25 +8,39 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install tools
+      - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y podman xorriso
+          sudo apt install -y curl xorriso genisoimage
 
-      - name: Pull your image
+      - name: Download Fedora installer ISO
         run: |
-          podman pull ghcr.io/bibsdb/sikker-selvbetjening:latest
+          curl -L -o fedora.iso \
+          https://download.fedoraproject.org/pub/fedora/linux/releases/42/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-42-1.1.iso
 
-      - name: Create output
+      - name: Create kickstart file
+        run: |
+          cat > library.ks << 'EOF'
+          lang en_US.UTF-8
+          keyboard us
+          timezone Europe/Copenhagen --utc
+          reboot
+
+          %post --erroronfail
+          bootc install to-disk \
+            --wipe \
+            --source-imgref ghcr.io/bibsdb/sikker-selvbetjening:latest \
+            /dev/sda
+          %end
+          EOF
+
+      - name: Create placeholder custom ISO
         run: |
           mkdir output
-          echo "ISO build placeholder for ghcr.io/bibsdb/sikker-selvbetjening:latest" > output/README.txt
+          cp fedora.iso output/sikker-selvbetjening-installer.iso
 
-      - name: Upload artifact
+      - name: Upload ISO
         uses: actions/upload-artifact@v4
         with:
-          name: installer-iso
-          path: output/
+          name: silverblue-installer
+          path: output/sikker-selvbetjening-installer.iso
