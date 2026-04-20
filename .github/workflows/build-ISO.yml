@@ -7,11 +7,13 @@ jobs:
   iso:
     runs-on: ubuntu-24.04
 
+    container:
+      image: fedora:42
+
     steps:
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y curl xorriso genisoimage lorax
+          dnf -y install curl lorax xorriso
 
       - name: Download Fedora installer ISO
         run: |
