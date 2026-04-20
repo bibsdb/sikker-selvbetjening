@@ -1,4 +1,4 @@
-name: Build Silverblue Installer ISO
+name: Build Silverblue Bootc Installer ISO
 
 on:
   workflow_dispatch:
@@ -11,32 +11,34 @@ jobs:
       image: fedora:42
 
     steps:
-      - name: Install dependencies
+      - name: Install tools
         run: |
-          dnf -y install curl lorax xorriso
+          dnf -y install lorax xorriso curl
 
       - name: Download Fedora installer ISO
         run: |
           curl -L -o fedora.iso \
           https://download.fedoraproject.org/pub/fedora/linux/releases/42/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-42-1.1.iso
 
-      - name: Create kickstart file
+      - name: Create Kickstart (bootc correct form)
         run: |
           cat > library.ks << 'EOF'
           lang en_US.UTF-8
           keyboard us
           timezone Europe/Copenhagen --utc
           reboot
+          clearpart --all --initlabel
+          autopart
 
-          %post --erroronfail
-          bootc install to-disk \
-            --wipe \
-            --source-imgref ghcr.io/bibsdb/sikker-selvbetjening:latest \
-            /dev/sda
+          # THIS is the important part
+          ostreecontainer --url=ghcr.io/bibsdb/sikker-selvbetjening:latest
+
+          %post
+          echo "Bootc image installed"
           %end
           EOF
 
-      - name: Build custom installer ISO
+      - name: Build installer ISO
         run: |
           mkdir -p output
           mkksiso library.ks fedora.iso output/sikker-selvbetjening-installer.iso
@@ -44,5 +46,5 @@ jobs:
       - name: Upload ISO
         uses: actions/upload-artifact@v4
         with:
-          name: silverblue-installer
+          name: installer-iso
           path: output/sikker-selvbetjening-installer.iso
