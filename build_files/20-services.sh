@@ -19,21 +19,16 @@ Type=oneshot
 ExecStart=/usr/bin/bash -c '/usr/bin/bootc upgrade --check && /usr/bin/bootc upgrade --apply --soft-reboot=auto'
 EOF
 
-# Write the timer unit that triggers the service on a 5-minute cadence.
-# OnBootSec delays the first run until the system has been up for 2 minutes.
-# RandomizedDelaySec spreads execution across machines to avoid synchronized
-# load spikes against the container registry.
+# Write the timer unit that triggers the service once nightly at 02:00.
+# OnCalendar schedules the timer for every day at 02:00 local time.
 # Persistent=true ensures a missed run (e.g. the machine was off) is caught
 # up the next time the timer activates.
 cat > /usr/lib/systemd/system/bootc-update-check.timer << 'EOF'
 [Unit]
-Description=Run bootc update check every 5 minutes
+Description=Run bootc update check nightly at 02:00
 
 [Timer]
-OnBootSec=2min
-OnUnitActiveSec=5min
-AccuracySec=30s
-RandomizedDelaySec=2min
+OnCalendar=*-*-* 02:00:00
 Persistent=true
 Unit=bootc-update-check.service
 
