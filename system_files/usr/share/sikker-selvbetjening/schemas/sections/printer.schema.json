@@ -208,9 +208,8 @@
               }
             },
             "ppd_file": {
-              "type": "string",
-              "description": "Path to a PPD file in assets that should be copied into the image.",
-              "pattern": "^assets/.+\\.ppd$"
+              "$ref": "#/$defs/asset_ref",
+              "description": "Typed asset reference to a PPD file copied from config/assets into the image."
             }
           },
           "required": [
@@ -219,6 +218,25 @@
             "ppd_file"
           ]
         }
+      ]
+    },
+    "asset_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "asset",
+          "description": "Reference type. Must be 'asset'."
+        },
+        "path": {
+          "type": "string",
+          "description": "Relative path under config/assets. For backward compatibility, values prefixed with assets/ are also accepted.",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "type",
+        "path"
       ]
     }
   }

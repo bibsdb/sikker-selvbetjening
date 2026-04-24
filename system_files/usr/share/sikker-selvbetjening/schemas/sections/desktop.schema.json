@@ -7,9 +7,8 @@
   "additionalProperties": false,
   "properties": {
     "background_image_file": {
-      "type": "string",
-      "description": "Path to the desktop background image asset. The _file suffix makes this value a file reference that is copied from assets during overlay rendering.",
-      "pattern": "^assets/.+"
+      "$ref": "#/$defs/asset_ref",
+      "description": "Typed asset reference for the desktop background image copied from config/assets during overlay rendering."
     },
     "shortcuts_in_menu": {
       "type": "array",
@@ -19,6 +18,27 @@
         "minLength": 1
       },
       "minItems": 1
+    }
+  },
+  "$defs": {
+    "asset_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "asset",
+          "description": "Reference type. Must be 'asset'."
+        },
+        "path": {
+          "type": "string",
+          "description": "Relative path under config/assets. For backward compatibility, values prefixed with assets/ are also accepted.",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "type",
+        "path"
+      ]
     }
   }
 }
