@@ -1,14 +1,58 @@
 [customizations.installer.kickstart]
 contents = """
+# Kickstart for unattended installation with GNOME defaults
+
+# Accept the EULA automatically
+eula --agreed
+
+# Set language to Danish (adjust as needed)
+lang da_DK.UTF-8
+
+# Set keyboard layout
+keyboard da
+
+# Set timezone
+timezone Europe/Copenhagen
+
+# Partition strategy: use LVM and automatic partitioning (entire disk)
+autopart --type=lvm --fstype=ext4
+
+# Accept the default storage configuration without prompts
+ignoredisk --only-use=sda,sdb,nvme*
+
+# Network - use DHCP
+network --bootproto=dhcp --onboot=on --activate
+
+# Root password (set to a strong password or use --lock to disable root login)
+rootpw --lock
+
+# Don't prompt for partitioning
+zerombr
+
+# Clear all partitions
+clearpart --all --initlabel
+
+# Skip initial setup on first boot
+firstboot --disable
+
+# Reboot after installation
+reboot
+
 %post
 bootc switch --mutate-in-place --transport registry ghcr.io/ublue-os/image-template:latest
+%end
+
+%anaconda
+# Disable the installer UI from prompting for anything
+# Run in non-interactive mode
 %end
 """
 
 [customizations.installer.modules]
 enable = [
   "org.fedoraproject.Anaconda.Modules.Storage",
-  "org.fedoraproject.Anaconda.Modules.Runtime"
+  "org.fedoraproject.Anaconda.Modules.Runtime",
+  "org.fedoraproject.Anaconda.Modules.Payloads"
 ]
 disable = [
   "org.fedoraproject.Anaconda.Modules.Network",
@@ -16,5 +60,6 @@ disable = [
   "org.fedoraproject.Anaconda.Modules.Services",
   "org.fedoraproject.Anaconda.Modules.Users",
   "org.fedoraproject.Anaconda.Modules.Subscription",
-  "org.fedoraproject.Anaconda.Modules.Timezone"
+  "org.fedoraproject.Anaconda.Modules.Timezone",
+  "org.fedoraproject.Anaconda.Modules.Localization"
 ]
