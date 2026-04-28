@@ -8,7 +8,6 @@ dnf5 install -y \
 	gnome-shell-extension-dash-to-panel \
 	gnome-shell-extension-apps-menu \
 	glibc-langpack-da \
-	glibc-locale-source \
 	libreoffice \
     libreoffice-langpack-da \
 	ansible
@@ -23,6 +22,10 @@ dnf5 install -y \
 # gnome-shell-extension-dash-to-panel: windows-like taskbar for gnome
 # gnome-shell-extension-apps-menu: adds an applications menu to the top bar
 # glibc-langpack-da: Danish language support for glibc
-# glibc-locale-source: source files for glibc locales, needed to generate da_DK.UTF-8 locale
 # libreoffice: office suite
 # libreoffice-langpack-da: Danish language support for LibreOffice
+# ansible: configuration management and provisioning
+
+# Clean up package manager cache to reduce image size
+dnf clean all
+rm -rf /var/cache/dnf /var/cache/yum
