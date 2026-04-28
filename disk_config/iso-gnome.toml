@@ -21,7 +21,7 @@ autopart --type=lvm --fstype=ext4
 ignoredisk --only-use=sda,sdb,nvme*
 
 # Network - use DHCP
-network --bootproto=dhcp --onboot=on --activate
+network --bootproto=dhcp --onboot=on --activate --hostname=ss-pc
 
 # Root password (set to a strong password or use --lock to disable root login)
 rootpw --lock
