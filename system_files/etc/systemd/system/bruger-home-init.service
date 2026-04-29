@@ -1,0 +1,12 @@
+[Unit]
+Description=Initialize Bruger home in RAM
+After=home-Bruger.mount
+Requires=home-Bruger.mount
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/cp -a /etc/skel/. /home/Bruger/
+ExecStart=/usr/bin/chown -R Bruger:Bruger /home/Bruger
+
+[Install]
+WantedBy=multi-user.target

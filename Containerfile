@@ -30,8 +30,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 # Ship schema files for runtime consumers.
 COPY --from=ctx /system_files/usr/share/sikker-selvbetjening/schemas /usr/share/sikker-selvbetjening/schemas
 
-# Mount Bruger home as tmpfs for complete ephemeral behavior on boot (unlimited RAM size)
-RUN echo 'tmpfs /home/Bruger tmpfs mode=0755,uid=1001,gid=1001 0 0' >> /etc/fstab
     
 ### LINTING
 ## Verify final image and contents are correct.

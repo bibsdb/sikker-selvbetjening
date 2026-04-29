@@ -19,5 +19,7 @@ useradd -u 1001 -m -s /bin/bash -c "Bruger" Bruger
 # Set password for Bruger user
 echo "Bruger:bruger" | chpasswd
 
-# Note: /home/Bruger is mounted as tmpfs in Containerfile, so it's automatically wiped on boot
-# No need for additional systemd-tmpfiles configuration
+# enable mounting Bruger in RAM for ephemeral home
+systemctl enable home-Bruger.mount
+systemctl enable bruger-home-init.service
+
