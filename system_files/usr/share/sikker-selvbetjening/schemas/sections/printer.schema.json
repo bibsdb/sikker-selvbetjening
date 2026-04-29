@@ -192,33 +192,15 @@
           "$ref": "#/$defs/printer_settings"
         },
         "ppd_file": {
-          "$ref": "#/$defs/asset_ref",
-          "description": "Typed asset reference to a PPD file copied from config/assets into the image."
+          "type": "string",
+          "pattern": "^assets/.+",
+          "description": "Asset path to a PPD file. Values starting with assets/ are treated as file paths under config/assets."
         }
       },
       "required": [
         "display_name",
         "ip",
         "ppd_file"
-      ]
-    },
-    "asset_ref": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "asset",
-          "description": "Reference type. Must be 'asset'."
-        },
-        "path": {
-          "type": "string",
-          "description": "Relative path under config/assets. For backward compatibility, values prefixed with assets/ are also accepted.",
-          "minLength": 1
-        }
-      },
-      "required": [
-        "type",
-        "path"
       ]
     }
   }

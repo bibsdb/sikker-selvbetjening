@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+OVERLAY_PAYLOAD_FILE="${1:?overlay payload file required}"
+ASSETS_ROOT="${2:?assets root required}"
+OUTPUT_ROOT="${3:?output root required}"
+HELPERS_DIR="${SIKKER_HELPERS_DIR:-/usr/libexec/sikker-overlay-helpers/enabled}"
+
+[[ -f "${OVERLAY_PAYLOAD_FILE}" ]] || { echo "Missing overlay payload file: ${OVERLAY_PAYLOAD_FILE}" >&2; exit 1; }
+[[ -d "${ASSETS_ROOT}" ]] || { echo "Missing assets root directory: ${ASSETS_ROOT}" >&2; exit 1; }
+mkdir -p "${OUTPUT_ROOT}"
+[[ -d "${HELPERS_DIR}" ]] || { echo "Missing helpers directory: ${HELPERS_DIR}" >&2; exit 1; }
+
+shopt -s nullglob
+helpers=("${HELPERS_DIR}"/*)
+shopt -u nullglob
+
+if [[ "${#helpers[@]}" -eq 0 ]]; then
+  echo "No overlay helpers found in ${HELPERS_DIR}" >&2
+  exit 0
+fi
+
+for helper in "${helpers[@]}"; do
+  if [[ ! -f "${helper}" || ! -x "${helper}" ]]; then
+    continue
+  fi
+
+  echo "Running helper: $(basename "${helper}")"
+  "${helper}" "${OVERLAY_PAYLOAD_FILE}" "${ASSETS_ROOT}" "${OUTPUT_ROOT}"
+done
