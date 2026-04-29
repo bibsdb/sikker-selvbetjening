@@ -17,7 +17,7 @@ install -Dm0644 /ctx/system_files/etc/timezone /usr/lib/sikker-selvbetjening/def
 cat > /usr/lib/systemd/system/sikker-apply-firstboot-defaults.service << 'EOF'
 [Unit]
 Description=Apply image defaults on first boot
-ConditionFirstBoot=yes
+ConditionPathExists=!/var/lib/sikker-selvbetjening/defaults-applied
 After=local-fs.target
 Before=display-manager.service gdm.service systemd-user-sessions.service
 
