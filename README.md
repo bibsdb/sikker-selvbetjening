@@ -19,7 +19,7 @@ The repository is structured so image customization happens in small shell steps
 	- `build.sh` runs all numbered scripts in lexical order
 	- `10-packages.sh` installs packages and Danish language tooling
 	- `20-services.sh` enables `podman.socket` and configures a `bootc` update-check timer
-	- `25-desktop-background.sh` sets up background image support from overlay configuration
+	- `25-overlay-helpers.sh` installs the overlay entrypoint and helper scripts
 	- `30-gnome-layout.sh` applies dconf defaults
 - `system_files/`
 	- Contains files copied into the image, including dconf defaults and locale config
