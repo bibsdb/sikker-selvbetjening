@@ -8,9 +8,6 @@ eula --agreed
 # Partition strategy: use LVM and automatic partitioning (entire disk)
 autopart --type=lvm --fstype=ext4
 
-# Accept the default storage configuration without prompts
-ignoredisk --only-use=sda,sdb,nvme*
-
 # Network - use DHCP
 network --bootproto=dhcp --onboot=on --activate
 
