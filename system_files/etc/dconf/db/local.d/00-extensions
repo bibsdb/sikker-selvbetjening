@@ -1,12 +1,10 @@
 # using the same section twice, will overwrite the former, so use arrays if necessary
+# arrays must not have any white space
 
 # dash-to-panel (windows-like taskbar)
 # apps-menu (windows-like start menu)
 [org/gnome/shell]
-enabled-extensions=[
-    'dash-to-panel@jderose9.github.com', 
-    'apps-menu@gnome-shell-extensions.gcampax.github.com'
-]
+enabled-extensions=['dash-to-panel@jderose9.github.com','apps-menu@gnome-shell-extensions.gcampax.github.com']
 
 # window buttons
 [org/gnome/desktop/wm/preferences]
