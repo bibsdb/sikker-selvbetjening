@@ -61,3 +61,7 @@ user-switch-enabled=false
 [org/gnome/login-screen]
 enable-fingerprint-authentication=false
 enable-smartcard-authentication=false
+
+# workspaces
+[org.gnome.mutter]
+dynamic-workspaces=false
