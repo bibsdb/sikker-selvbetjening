@@ -5,42 +5,38 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../lib/overlay-common.sh
 source "${SCRIPT_DIR}/../lib/overlay-common.sh"
 
-OVERLAY_PAYLOAD_FILE="${1:?overlay payload file required}"
-ASSETS_ROOT="${2:?assets root required}"
-OUTPUT_ROOT="${3:?output root required}"
-
-echo "[10-background] start"
-echo "[10-background] OVERLAY_PAYLOAD_FILE=${OVERLAY_PAYLOAD_FILE}"
-echo "[10-background] ASSETS_ROOT=${ASSETS_ROOT}"
-echo "[10-background] OUTPUT_ROOT=${OUTPUT_ROOT}"
+# Positional arguments passed in by sikker-apply-overlay
+OVERLAY_PAYLOAD_FILE="${1:?overlay payload file required}"  # group_vars JSON file for this target
+ASSETS_ROOT="${2:?assets root required}"                    # directory containing asset files
+OUTPUT_ROOT="${3:?output root required}"                    # staging root written into the live system
 
 overlay_require_file "${OVERLAY_PAYLOAD_FILE}"
 overlay_require_dir "${ASSETS_ROOT}"
 
-background_value="$(overlay_json_get_string "${OVERLAY_PAYLOAD_FILE}" "desktop.background_image_file" | tr -d '\r')"
-echo "[10-background] background_value=${background_value:-<empty>}"
-if [[ -z "${background_value}" ]]; then
-  echo "[10-background] no desktop.background_image_file, exiting"
-  exit 0
-fi
+# Declare every overlay payload field this script needs.
+# overlay_load extracts them all in a single Python call and returns bash
+# declare statements; eval brings the variables into the current shell.
+# Type ":asset" validates the assets/… prefix and strips it to a relative path.
+overlay_fields \
+  BACKGROUND_IMAGE_FILE=desktop.background_image_file:asset
 
-background_rel_path="$(overlay_asset_relpath "${background_value}" | tr -d '\r')"
-echo "[10-background] background_rel_path=${background_rel_path:-<empty>}"
-if [[ -z "${background_rel_path}" ]]; then
-  echo "[10-background] asset path did not resolve, exiting"
-  exit 0
-fi
+eval "$(overlay_load "${OVERLAY_PAYLOAD_FILE}")"
 
-source_image="${ASSETS_ROOT}/${background_rel_path}"
-echo "[10-background] source_image=${source_image}"
+# If the field is absent or empty, this script has nothing to do
+[[ -z "${BACKGROUND_IMAGE_FILE}" ]] && exit 0
+
+# Copy the background image into the output tree under a fixed well-known name
+# so the dconf keyfile below can reference a stable path regardless of the
+# original filename chosen by the overlay author
+source_image="${ASSETS_ROOT}/${BACKGROUND_IMAGE_FILE}"
 overlay_require_file "${source_image}"
 
 mkdir -p "${OUTPUT_ROOT}/usr/share/backgrounds/sikker-selvbetjening"
 cp -f "${source_image}" "${OUTPUT_ROOT}/usr/share/backgrounds/sikker-selvbetjening/default-background"
-echo "[10-background] copied background"
 
+# Write a dconf keyfile that points GNOME at the copied background image.
+# The file is picked up by dconf update on the next login or apply cycle.
 mkdir -p "${OUTPUT_ROOT}/etc/dconf/db/local.d"
-echo "[10-background] writing dconf file to ${OUTPUT_ROOT}/etc/dconf/db/local.d/03-desktop-background"
 cat > "${OUTPUT_ROOT}/etc/dconf/db/local.d/03-desktop-background" <<'EOF'
 [org/gnome/desktop/background]
 picture-uri='file:///usr/share/backgrounds/sikker-selvbetjening/default-background'
@@ -50,12 +46,3 @@ primary-color='#000000'
 secondary-color='#000000'
 EOF
 
-if [[ -f "${OUTPUT_ROOT}/etc/dconf/db/local.d/03-desktop-background" ]]; then
-  echo "[10-background] dconf file created"
-  cat "${OUTPUT_ROOT}/etc/dconf/db/local.d/03-desktop-background"
-else
-  echo "[10-background] dconf file missing after write"
-  exit 1
-fi
-
-echo "[10-background] done"

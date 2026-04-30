@@ -16,52 +16,31 @@ overlay_require_dir() {
   [[ -d "${path}" ]] || overlay_die "Missing directory: ${path}"
 }
 
-overlay_json_get_string() {
-  local overlay_path="$1"
-  local dotted_key="$2"
+# Registry populated by overlay_fields(); consumed by overlay_load().
+_OVERLAY_FIELDS=()
 
-  python3 - "${overlay_path}" "${dotted_key}" <<'PY'
-import json
-import sys
-
-overlay_path = sys.argv[1]
-dotted_key = sys.argv[2]
-
-with open(overlay_path, "r", encoding="utf-8") as fh:
-    data = json.load(fh)
-
-value = data
-for part in dotted_key.split('.'):
-    if not isinstance(value, dict) or part not in value:
-        print("")
-        raise SystemExit(0)
-    value = value[part]
-
-if isinstance(value, str):
-    print(value)
-else:
-    print("")
-PY
+# overlay_fields VAR=section.key[:type] ...
+#
+# Declares the overlay payload fields a helper script needs.
+# Each spec is:  BASH_VARNAME=dotted.json.key          (type defaults to "string")
+#            or  BASH_VARNAME=dotted.json.key:string
+#            or  BASH_VARNAME=dotted.json.key:asset     (assets/… path → relative path)
+#            or  BASH_VARNAME=dotted.json.key:array     (JSON array → bash indexed array)
+#
+# Call this once at the top of each helper script, then call overlay_load.
+overlay_fields() {
+  _OVERLAY_FIELDS+=("$@")
 }
 
-overlay_asset_relpath() {
-  local asset_value="$1"
-
-  python3 - "${asset_value}" <<'PY'
-import posixpath
-import sys
-
-asset_value = sys.argv[1]
-
-if not asset_value.startswith("assets/"):
-    print("")
-    raise SystemExit(0)
-
-rel_path = posixpath.normpath(asset_value[7:])
-if rel_path in (".", "") or rel_path.startswith("../") or "/../" in rel_path:
-    print(f"Invalid asset path: {asset_value}", file=sys.stderr)
-    raise SystemExit(1)
-
-print(rel_path)
-PY
+# overlay_load OVERLAY_PAYLOAD_FILE
+#
+# Extracts all fields registered via overlay_fields from the JSON payload in a
+# single Python invocation and prints bash declare statements.  Eval the output:
+#
+#   eval "$(overlay_load "${OVERLAY_PAYLOAD_FILE}")"
+overlay_load() {
+  local overlay_path="$1"
+  local lib_dir
+  lib_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  python3 "${lib_dir}/overlay_load.py" "${overlay_path}" "${_OVERLAY_FIELDS[@]}"
 }
