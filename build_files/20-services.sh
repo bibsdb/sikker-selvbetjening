@@ -36,8 +36,45 @@ Unit=bootc-update-check.service
 WantedBy=timers.target
 EOF
 
+# Write a oneshot service that applies config updates via ansible-pull.
+cat > /usr/lib/systemd/system/sikker-ansible-pull.service << 'EOF'
+[Unit]
+Description=Sikker Selvbetjening - ansible-pull config update
+Documentation=https://github.com/bibsdb/sikker-selvbetjening-config
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/etc/sikker-selvbetjening/ansible-pull.env
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/sikker-selvbetjening/ansible-pull.env
+ExecStart=ansible-pull --url $ANSIBLE_PULL_REPO \
+	--inventory $ANSIBLE_PULL_INVENTORY \
+	$ANSIBLE_PULL_PLAYBOOK
+WorkingDirectory=/var/lib/sikker-ansible-pull
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sikker-ansible-pull
+EOF
+
+# Run ansible-pull every 5 minutes when the machine is up.
+cat > /usr/lib/systemd/system/sikker-ansible-pull.timer << 'EOF'
+[Unit]
+Description=Sikker Selvbetjening - ansible-pull config update (timer)
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+Persistent=true
+Unit=sikker-ansible-pull.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
 # Enable system services in the image.
 # podman.socket activates the Podman API on demand via socket activation.
 # bootc-update-check.timer starts the automatic update cycle on every boot.
 systemctl enable podman.socket
 systemctl enable bootc-update-check.timer
+systemctl enable sikker-ansible-pull.timer
