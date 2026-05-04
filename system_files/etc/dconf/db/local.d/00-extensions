@@ -57,11 +57,6 @@ show-full-name-in-top-bar=false
 status-message-enabled=false
 user-switch-enabled=false
 
-# login authentication
-[org/gnome/login-screen]
-enable-fingerprint-authentication=false
-enable-smartcard-authentication=false
-
 # workspaces
 [org.gnome.mutter]
 dynamic-workspaces=false
