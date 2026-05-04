@@ -40,7 +40,7 @@ EOF
 cat > /usr/lib/systemd/system/sikker-ansible-pull.service << 'EOF'
 [Unit]
 Description=Sikker Selvbetjening - ansible-pull config update
-Documentation=https://github.com/bibsdb/sikker-selvbetjening-config
+Documentation=https://github.com/os2borgerpc/sikker-selvbetjening-config
 After=network-online.target
 Wants=network-online.target
 ConditionPathExists=/etc/sikker-selvbetjening/ansible-pull.env
