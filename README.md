@@ -9,11 +9,39 @@ Custom Fedora Silverblue bootc image and disk image pipeline for a Danish-focuse
 - Published docs: https://os2borgerpc.github.io/sikker-selvbetjening/
 - Docs deployment workflow: https://github.com/os2borgerpc/sikker-selvbetjening/actions/workflows/docs-deploy.yml
 
+## Project flow diagram
+
+```mermaid
+flowchart TD
+	A[Source repository] --> B[Containerfile]
+	A --> C[build_files scripts]
+	A --> D[system_files defaults]
+	A --> E[disk_config templates]
+	A --> F[docs and mkdocs.yml]
+
+	B --> G[build.yml]
+	C --> G
+	D --> G
+	G --> H[GHCR image latest]
+
+	H --> I[build-disk.yml]
+	E --> I
+	I --> J[Disk artifact anaconda-iso]
+
+	F --> K[docs-build.yml]
+	K --> L[PR build validation]
+	F --> M[docs-deploy.yml]
+	M --> N[GitHub Pages site]
+
+	J --> O[Installed system]
+	O --> P[first boot helpers and overlay apply]
+	P --> Q[Configured desktop wifi printer and policies]
+```
+
 ## What this project builds
 
 - A custom container image based on `quay.io/fedora-ostree-desktops/silverblue:42`
-- Disk artifacts from that image:
-	- `qcow2`
+- Disk artifact currently produced by CI from that image:
 	- `anaconda-iso`
 
 The repository is structured so image customization happens in small shell steps under `build_files/`, while defaults and desktop settings are provided from `system_files/`.
@@ -34,8 +62,10 @@ The repository is structured so image customization happens in small shell steps
 	- `disk.toml` for generic disk image customization
 	- `iso-gnome.toml` for installer ISO customization
 - `.github/workflows/`
-	- `build.yml` builds and pushes the container image to GHCR on push to `main`
-	- `build-disk.yml` builds `qcow2` and `anaconda-iso` from the published image
+	- `build.yml` builds and pushes the container image to GHCR on push to `main`, `bartosz`, and `agnete`
+	- `build-disk.yml` currently builds `anaconda-iso` from the published image
+	- `docs-build.yml` validates MkDocs builds on PRs/pushes affecting docs
+	- `docs-deploy.yml` publishes docs to GitHub Pages from `main`
 
 ## How image customization works
 
@@ -54,7 +84,7 @@ The `Containerfile` uses a multi-stage pattern:
 
 File: `.github/workflows/build.yml`
 
-- Trigger: push to `main`
+- Trigger: push to `main`, `bartosz`, `agnete`
 - Builds image from `Containerfile`
 - Tags with date-based metadata
 - Pushes to GHCR as:
@@ -68,20 +98,31 @@ File: `.github/workflows/build-disk.yml`
 - Triggers:
 	- manual (`workflow_dispatch`) with platform and upload options
 	- PRs touching disk configs/workflow
-- Builds two artifact types via matrix:
-	- `qcow2`
+- Builds one artifact type via matrix:
 	- `anaconda-iso`
-- Uses `disk_config/disk.toml` for `qcow2`
-- Uses `disk_config/iso-gnome.toml` for `anaconda-iso`
+- Uses `disk_config/iso-gnome.toml` for the current matrix build
 - Output destination:
 	- GitHub job artifacts (default)
 	- S3 (optional)
+
+`disk_config/disk.toml` is still kept in the repository and can be used if `qcow2` is re-enabled in the workflow matrix.
+
+### Docs workflows
+
+Files:
+
+- `.github/workflows/docs-build.yml`
+	- Triggers on PR and push to `main` when docs files or MkDocs config changes
+	- Validates docs with `mkdocs build --strict`
+- `.github/workflows/docs-deploy.yml`
+	- Triggers on push to `main` for docs-related changes
+	- Builds and deploys docs to GitHub Pages
 
 This gives a Danish-oriented default desktop experience out of the box.
 
 ## bootc update checks
 
-The image includes a systemd timer that checks every 5 minutes and applies updates when available:
+The image includes a systemd timer that runs nightly at 02:00 local time and applies updates when available:
 
 - Timer: `bootc-update-check.timer`
 - Service: `bootc-update-check.service`
