@@ -1,0 +1,18 @@
+site_name: Sikker Selvbetjening Docs
+site_description: Documentation for Sikker Selvbetjening
+repo_url: https://github.com/os2borgerpc/sikker-selvbetjening
+site_dir: site
+
+theme:
+  name: mkdocs
+
+docs_dir: docs
+
+nav:
+  - Home: index.md
+  - About: about.md
+  - Schemas:
+      - Root: schemas/root.md
+      - Desktop: schemas/desktop.md
+      - Printer: schemas/printer.md
+      - Wi-Fi: schemas/wifi.md

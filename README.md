@@ -1,6 +1,13 @@
 # Sikker Selvbetjening
 
+[![Docs Deploy](https://github.com/os2borgerpc/sikker-selvbetjening/actions/workflows/docs-deploy.yml/badge.svg)](https://github.com/os2borgerpc/sikker-selvbetjening/actions/workflows/docs-deploy.yml)
+
 Custom Fedora Silverblue bootc image and disk image pipeline for a Danish-focused desktop setup.
+
+## Documentation
+
+- Published docs: https://os2borgerpc.github.io/sikker-selvbetjening/
+- Docs deployment workflow: https://github.com/os2borgerpc/sikker-selvbetjening/actions/workflows/docs-deploy.yml
 
 ## What this project builds
 

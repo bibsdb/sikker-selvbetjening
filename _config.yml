@@ -1,0 +1,11 @@
+title: Sikker Selvbetjening Docs
+description: Documentation for Sikker Selvbetjening
+
+# MkDocs is used for build output. Keep Jekyll from processing unrelated project files.
+exclude:
+  - build_files/
+  - disk_config/
+  - system_files/
+  - Containerfile
+  - README.md
+  - mkdocs.yml
