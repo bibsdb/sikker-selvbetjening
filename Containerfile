@@ -33,6 +33,9 @@ COPY --from=ctx /system_files/ /
 # Make libexec scripts executable
 RUN chmod 755 /usr/libexec/sikker-*
 
+# Enable systemd services
+RUN systemctl enable sikker-reset-bruger-home.service
+
 # Update dconf database with new configurations
 RUN dconf update
 
