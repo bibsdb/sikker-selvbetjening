@@ -13,9 +13,4 @@ echo "superuser:superuser" | chpasswd
 echo "superuser ALL=(ALL) ALL" >> /etc/sudoers.d/superuser
 chmod 0440 /etc/sudoers.d/superuser
 
-# Create user for citizen use
-# -M prevents initial home creation; template-based reset will handle it
-useradd -M -s /bin/bash -c "Bruger" Bruger
-
-
-
+# citizen user will be created on every boot by /usr/libexec/sikker-reset-bruger-home
