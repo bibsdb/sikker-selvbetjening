@@ -23,9 +23,6 @@ useradd \
     --shell /bin/bash \
     "$USERNAME"
 
-# Ensure home exists and is clean
-rm -rf "${BRUGER_HOME:?}/"*
-
 # Copy template contents into the home directory
 if [ -d "$TEMPLATE_DIR" ]; then
     cp -a "$TEMPLATE_DIR"/. "$BRUGER_HOME"/

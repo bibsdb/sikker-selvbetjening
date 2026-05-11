@@ -64,5 +64,12 @@ status-message-enabled=false
 # user-switch-enabled=false
 
 # workspaces
-[org.gnome.mutter]
+[org/gnome/mutter]
 dynamic-workspaces=false
+
+# settings for dash-to-panel (taskbar)
+[org/gnome/shell/extensions/dash-to-panel]
+group-apps=false
+show-running-apps=true
+overview-click-to-exit=true
+hide-overview-on-startup=true
