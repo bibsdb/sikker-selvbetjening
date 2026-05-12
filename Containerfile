@@ -31,7 +31,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 COPY --from=ctx /system_files/ /
 
 # Make libexec scripts executable
-RUN chmod 755 /usr/libexec/sikker-*
+RUN chmod 755 /usr/libexec/*.sh
 
 # Enable systemd services
 RUN systemctl enable sikker-reset-bruger-home.service
