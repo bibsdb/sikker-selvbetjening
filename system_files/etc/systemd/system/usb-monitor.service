@@ -1,0 +1,9 @@
+[Unit]
+Description=USB monitor notifications
+
+[Service]
+ExecStart=/usr/libexec/usb-monitor.sh
+Restart=always
+
+[Install]
+WantedBy=default.target
