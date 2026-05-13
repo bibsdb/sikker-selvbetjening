@@ -49,7 +49,7 @@ while read -r line; do
         NAME="${VENDOR:-Unknown Vendor} - ${MODEL:-Unknown Device}"
 
         # GNOME desktop notification for device insertion
-        notify-send -u critical -a "USB Devices" \
+        notify-send -u critical -a "USB Devices" -t 10000 \
             "USB Connected" "$NAME"
 
         # Reset state to avoid leaking data into next event
@@ -62,7 +62,7 @@ while read -r line; do
 
         NAME="${VENDOR:-Unknown Vendor} - ${MODEL:-Unknown Device}"
 
-        notify-send -u critical -a "USB Devices" \
+        notify-send -u critical -a "USB Devices" -t 10000 \
             "USB Removed" "$NAME"
 
         ACTION=""

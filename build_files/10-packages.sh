@@ -10,7 +10,8 @@ dnf5 install -y \
 	glibc-langpack-da \
 	libreoffice \
     libreoffice-langpack-da \
-	ansible
+	ansible \
+	grubby
 # Use a COPR Example:
 # dnf5 -y copr enable ublue-os/staging
 # dnf5 -y install package
