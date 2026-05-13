@@ -39,6 +39,9 @@ RUN systemctl enable sikker-reset-bruger-home.service
 # Enable usb-monitor service for all users 
 RUN systemctl --global enable usb-monitor.service
 
+# Append kernel arguments for a quieter boot experience and to hide systemd status messages
+RUN rpm-ostree kargs --append="quiet splash loglevel=3 rd.systemd.show_status=false systemd.show_status=false"
+
 # Update dconf database with new configurations
 RUN dconf update
 
