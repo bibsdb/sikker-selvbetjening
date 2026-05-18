@@ -40,8 +40,11 @@ RUN systemctl enable sikker-reset-bruger-home.service
 RUN systemctl --global enable usb-monitor.service
 RUN systemctl --global enable kiosk-monitor.service
 
-# Append kernel arguments for a quieter boot experience and to hide systemd status messages
-RUN rpm-ostree kargs --append="quiet splash loglevel=3 rd.systemd.show_status=false systemd.show_status=false"
+# Create the bootc kargs directory and write the parameters out to a TOML file
+# for a quieter boot experience and to hide systemd status messages
+RUN mkdir -p /usr/lib/bootc/kargs.d && \
+    echo 'kargs = ["quiet", "splash", "loglevel=3", "rd.systemd.show_status=false", "systemd.show_status=false"]' \
+    > /usr/lib/bootc/kargs.d/10-quiet-boot.toml
 
 # Update dconf database with new configurations
 RUN dconf update
