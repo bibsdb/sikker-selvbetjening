@@ -33,11 +33,12 @@ COPY --from=ctx /system_files/ /
 # Make libexec scripts executable
 RUN chmod 755 /usr/libexec/*.sh
 
-# Enable systemd services
+# Enable systemd (root) services
 RUN systemctl enable sikker-reset-bruger-home.service
 
-# Enable usb-monitor service for all users 
+# Enable user services 
 RUN systemctl --global enable usb-monitor.service
+RUN systemctl --global enable kiosk-monitor.service
 
 # Append kernel arguments for a quieter boot experience and to hide systemd status messages
 RUN rpm-ostree kargs --append="quiet splash loglevel=3 rd.systemd.show_status=false systemd.show_status=false"

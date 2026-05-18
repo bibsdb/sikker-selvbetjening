@@ -2,4 +2,5 @@ cosign.key
 _build_*
 output
 bootiso
+ToDo.txt
 _build-*/**
