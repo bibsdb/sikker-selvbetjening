@@ -12,7 +12,22 @@ echo "[+] Kiosk Data Protection Monitor Started."
 echo "[+] Status: UNARMED (Waiting for first user interaction...)"
 
 while true; do
-    # Query GNOME's Mutter IdleMonitor via D-Bus
+    # 1. Check if an application (like YouTube or VLC) has inhibited the idle state
+    # Flag 8 explicitly queries "Is marking the session as idle blocked?"
+    raw_inhibited=$(gdbus call --session \
+                               --dest org.gnome.SessionManager \
+                               --object-path /org/gnome/SessionManager \
+                               --method org.gnome.SessionManager.IsInhibited 8)
+
+    if [[ "$raw_inhibited" == *"true"* ]]; then
+        # An app is actively playing media. Keep the system ARMED, but skip the timeout logic.
+        has_interacted=true
+        echo "[~] Media playback / Session inhibition detected. Postponing idle checks..."
+        sleep 10  # Sleep longer while video is playing to save resources
+        continue
+    fi
+
+    # 2. Query GNOME's Mutter IdleMonitor via D-Bus
     raw_idle=$(gdbus call --session \
                          --dest org.gnome.Mutter.IdleMonitor \
                          --object-path /org/gnome/Mutter/IdleMonitor/Core \
@@ -52,12 +67,8 @@ while true; do
             # Capture Zenity's exit status
             RESPONSE=$?
 
-            # 0 = User clicked "I'm still here!"
-            # 5 = The 30-second timeout expired
-            # 1 = User clicked the window "X" close button
             if [ "$RESPONSE" -eq 0 ]; then
                 echo "[+] User confirmed presence. Resetting idle tracker."
-                # The physical click resets GNOME's idle timer to 0 automatically.
             else
                 echo "[-] Timeout reached or dialog closed ($RESPONSE). Executing secure reboot..."
                 /usr/bin/systemctl reboot
