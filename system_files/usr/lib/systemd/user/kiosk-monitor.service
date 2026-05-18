@@ -5,7 +5,7 @@ After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/kiosk-monitor.sh
+ExecStart=/usr/libexec/kiosk-monitor.sh
 # Automatically restart the script if it crashes
 Restart=always
 RestartSec=3
