@@ -54,7 +54,7 @@ RUN convert -size 256x256 xc:transparent \
 
 # 5. Point the respective desktop launchers to your custom text icons
 RUN sed -i 's/^Icon=.*/Icon=kiosk-writer/' /usr/share/applications/libreoffice-writer.desktop
-RUN sed -i 's/^Icon=.*/Icon=kiosk-browser/' /usr/share/applications/firefox.desktop
+RUN sed -i 's/^Icon=.*/Icon=kiosk-browser/' /usr/share/applications/org.mozilla.firefox.desktop
 
 # Make libexec scripts executable
 RUN chmod 755 /usr/libexec/*.sh
