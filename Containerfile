@@ -30,32 +30,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 # Copy system files (config, services, scripts) into the image
 COPY --from=ctx /system_files/ /
 
-# 1. Ensure ImageMagick and fonts are present for the build phase
-RUN dnf install -y ImageMagick liberation-sans-fonts
-
-# 2. Create the hicolor icons directory path if it doesn't exist
-RUN mkdir -p /usr/share/icons/hicolor/256x256/apps/
-
-# 3. Generate the "WORD PROCESSOR" text icon
-RUN convert -size 256x256 xc:transparent \
-            -font Liberation-Sans-Bold \
-            -gravity center \
-            -fill "rgba(40, 40, 40, 0.8)" -draw "roundrectangle 10,40 246,216 25,25" \
-            -fill "#FFFFFF" -pointsize 32 -interline-spacing -2 -draw "text 0,0 'WORD\nPROCESSOR'" \
-            /usr/share/icons/hicolor/256x256/apps/kiosk-writer.png
-
-# 4. Generate the "INTERNET BROWSER" text icon
-RUN convert -size 256x256 xc:transparent \
-            -font Liberation-Sans-Bold \
-            -gravity center \
-            -fill "rgba(40, 40, 40, 0.8)" -draw "roundrectangle 10,40 246,216 25,25" \
-            -fill "#FFFFFF" -pointsize 32 -interline-spacing -2 -draw "text 0,0 'INTERNET\nBROWSER'" \
-            /usr/share/icons/hicolor/256x256/apps/kiosk-browser.png
-
-# 5. Point the respective desktop launchers to your custom text icons
-RUN sed -i 's/^Icon=.*/Icon=kiosk-writer/' /usr/share/applications/libreoffice-writer.desktop
-RUN sed -i 's/^Icon=.*/Icon=kiosk-browser/' /usr/share/applications/org.mozilla.firefox.desktop
-
 # Make libexec scripts executable
 RUN chmod 755 /usr/libexec/*.sh
 
