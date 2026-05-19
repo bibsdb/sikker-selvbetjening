@@ -3,7 +3,13 @@
 # Configuration (Time in milliseconds)
 # 2 minutes = 120000 ms
 IDLE_THRESHOLD=120000 
+# Time given to user to respond (in seconds)
 PROMPT_TIMEOUT=30
+
+WARNING_TITLE="Inaktivitet Opdaget"
+WARNING_MESSAGE="Er du der stadigvæk?\n\nKlik på knappen nedenfor for at fortsætte. Ellers vil denne computer automatisk genstarte og slette alle sessiondata om ${PROMPT_TIMEOUT} sekunder."
+BUTTON_LABEL="Jeg er her stadigvæk!"
+
 
 # State Tracker: Starts as false so we don't reboot an empty computer
 has_interacted=false
@@ -57,9 +63,9 @@ while true; do
 
             # Launch the single-button Zenity warning dialog box
             zenity --warning \
-                   --title="Inactivity Warning" \
-                   --text="Are you still there?\n\nClick the button below to keep working. Otherwise, this computer will automatically restart and wipe all session data in 30 seconds." \
-                   --ok-label="I'm still here!" \
+                   --title="$WARNING_TITLE" \
+                   --text="$WARNING_MESSAGE" \
+                   --ok-label="$BUTTON_LABEL" \
                    --timeout=$PROMPT_TIMEOUT \
                    --width=450 \
                    --modal

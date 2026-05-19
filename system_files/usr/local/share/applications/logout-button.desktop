@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Afslut Session (Log ud)
+GenericName=Log ud knap
+Comment=Slet sessiondata og genstart computeren
+Exec=/usr/libexec/logout-user.sh
+Icon=
+Terminal=false
+Categories=Utility;System;

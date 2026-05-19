@@ -2,6 +2,6 @@
 # IMPORTANT: must be single line array with no spaces for dconf build to succeed
 
 [org/gnome/shell]
-favorite-apps=['org.gnome.Nautilus.desktop','org.mozilla.firefox.desktop','libreoffice-writer.desktop','org.gnome.Calculator.desktop','org.gnome.Settings.desktop']
+favorite-apps=['org.gnome.Nautilus.desktop','org.mozilla.firefox.desktop','libreoffice-writer.desktop','logout-user.desktop']
 
 # Nautilus is the File Explorer equivalent for this distro

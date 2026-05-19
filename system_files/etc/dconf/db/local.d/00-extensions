@@ -34,10 +34,10 @@ enable-auto-login=true
 # control
 [org/gnome/desktop/lockdown]
 disable-command-line=true
-# disable-lock-screen=true
+disable-lock-screen=true
 disable-save-to-disk=true
 disable-show-password=true
-# disable-user-switching=true
+disable-user-switching=true
 user-administration-disabled=true
 
 # notifications
