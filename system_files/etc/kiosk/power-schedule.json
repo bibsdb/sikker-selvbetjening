@@ -15,7 +15,7 @@
   "schedule": {
     "1": { "day": "Monday",    "off_time": "22:00", "on_time": "07:00", "state": "suspend" },
     "2": { "day": "Tuesday",   "off_time": "22:00", "on_time": "07:00", "state": "suspend" },
-    "3": { "day": "Wednesday", "off_time": "11:30", "on_time": "11:40", "state": "suspend" },
+    "3": { "day": "Wednesday", "off_time": "12:00", "on_time": "14:00", "state": "suspend" },
     "4": { "day": "Thursday",  "off_time": "22:00", "on_time": "07:00", "state": "suspend" },
     "5": { "day": "Friday",    "off_time": "22:00", "on_time": "07:00", "state": "screen-off" },
     "6": { "day": "Saturday",  "off_time": "18:00", "on_time": "10:00", "state": "hibernate" },

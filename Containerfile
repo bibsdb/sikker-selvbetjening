@@ -46,6 +46,10 @@ RUN mkdir -p /usr/lib/bootc/kargs.d && \
     echo 'kargs = ["quiet", "splash", "loglevel=3", "rd.systemd.show_status=false", "systemd.show_status=false"]' \
     > /usr/lib/bootc/kargs.d/10-quiet-boot.toml
 
+# make sure timezone is set to Copenhagen
+RUN ln -sf /usr/share/zoneinfo/Europe/Copenhagen /etc/localtime && \
+    echo "Europe/Copenhagen" > /etc/timezone
+
 # Update dconf database with new configurations
 RUN dconf update
 
