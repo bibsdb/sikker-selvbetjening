@@ -1,0 +1,15 @@
+# AFK
+[org/gnome/desktop/screensaver]
+idle-activation-enabled=false
+lock-enabled=false
+show-full-name-in-top-bar=false
+status-message-enabled=false
+user-switch-enabled=false
+
+[org/gnome/desktop/session]
+# 0 disables the screen saver/blank screen completely (value is in seconds)
+idle-delay=uint32 0
+
+[org/gnome/settings-daemon/plugins/power]
+sleep-inactive-ac-type='nothing'
+sleep-inactive-battery-type='nothing'
