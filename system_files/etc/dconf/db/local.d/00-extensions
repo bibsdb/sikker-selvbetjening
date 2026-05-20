@@ -38,6 +38,7 @@ disable-lock-screen=true
 disable-save-to-disk=true
 disable-show-password=true
 disable-user-switching=true
+disable-log-out=true
 user-administration-disabled=true
 
 # notifications
