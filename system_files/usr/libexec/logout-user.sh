@@ -22,7 +22,7 @@ RESPONSE=$?
 
 if [ "$RESPONSE" -eq 0 ]; then
     echo "[!] User confirmed logout. Executing secure reboot without authentication..."
-    sudo /usr/bin/systemctl reboot -f
+    /usr/libexec/reboot-handler.sh
 else
     echo "[~] Logout canceled by user. Returning to session."
     exit 0
