@@ -19,17 +19,15 @@ echo "[+] Status: UNARMED (Waiting for first user interaction...)"
 
 while true; do
     # 1. Check if an application (like YouTube or VLC) has inhibited the idle state
-    # Flag 8 explicitly queries "Is marking the session as idle blocked?"
     raw_inhibited=$(gdbus call --session \
                                --dest org.gnome.SessionManager \
                                --object-path /org/gnome/SessionManager \
                                --method org.gnome.SessionManager.IsInhibited 8)
 
     if [[ "$raw_inhibited" == *"true"* ]]; then
-        # An app is actively playing media. Keep the system ARMED, but skip the timeout logic.
         has_interacted=true
         echo "[~] Media playback / Session inhibition detected. Postponing idle checks..."
-        sleep 10  # Sleep longer while video is playing to save resources
+        sleep 10  
         continue
     fi
 
@@ -39,10 +37,8 @@ while true; do
                          --object-path /org/gnome/Mutter/IdleMonitor/Core \
                          --method org.gnome.Mutter.IdleMonitor.GetIdletime)
     
-    # Extract the raw millisecond integer
     idle_ms=$(echo "$raw_idle" | awk '{print $2}' | tr -d ',)')
 
-    # SAFEGUARD: Validate that idle_ms is strictly a non-empty integer
     if [[ ! "$idle_ms" =~ ^[0-9]+$ ]]; then
         echo "[!] Warning: Invalid D-Bus response received. Retrying in next cycle..."
         sleep 2
@@ -61,7 +57,6 @@ while true; do
         if [ "$idle_ms" -ge "$IDLE_THRESHOLD" ]; then
             echo "[!] 2 minutes of inactivity reached. Displaying single-button warning..."
 
-            # Launch the single-button Zenity warning dialog box
             zenity --warning \
                    --title="$WARNING_TITLE" \
                    --text="$WARNING_MESSAGE" \
@@ -70,18 +65,17 @@ while true; do
                    --width=450 \
                    --modal
 
-            # Capture Zenity's exit status
             RESPONSE=$?
 
             if [ "$RESPONSE" -eq 0 ]; then
                 echo "[+] User confirmed presence. Resetting idle tracker."
             else
-                echo "[-] Timeout reached or dialog closed ($RESPONSE). Executing secure reboot..."
-                /usr/bin/systemctl reboot
+                echo "[-] Timeout reached or dialog closed ($RESPONSE). Executing secure kexec fast reboot..."
+                # UPDATED: Replaced standard reboot with passwordless sudo kexec
+                sudo /usr/bin/systemctl kexec
             fi
         fi
     fi
 
-    # Poll every 2 seconds to keep CPU overhead practically zero
     sleep 2
 done

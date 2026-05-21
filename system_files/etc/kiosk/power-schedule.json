@@ -1,24 +1,23 @@
 {
-  "_README_FIRST": "This file controls the automatic power schedule. Your web interface or manual edits will change this file. Valid values for the 'state' property are documented below.",
+  "_README_FIRST": "This file tracks the library's OPEN hours. If open_time and close_time are identical, the kiosk remains closed all day and stays asleep.",
 
   "__HELP_VALID_STATES__": {
-    "awake":        "Kiosk stays fully active and turned on during these hours.",
-    "screen-off":   "PC stays on (accessible via SSH), but the monitor backlight turns completely off to save power.",
-    "suspend":      "Sleep to RAM. Super fast wake-up, drops machine into a very low-power state.",
+    "screen-off":   "PC stays on (accessible via SSH), but the monitor backlight turns completely off during closed hours.",
+    "suspend":      "Sleep to RAM. Super fast wake-up, drops machine into a very low-power state during closed hours.",
     "hibernate":    "Sleep to Disk. Zero power drain. Requires Linux swap space.",
     "hybrid-sleep": "Saves state to disk AND sleeps to RAM.",
-    "off":          "Complete shutdown. Motherboard RTC timer will physically turn the PC back on at the open hour."
+    "off":          "Complete hardware shutdown. Motherboard RTC timer will physically turn the PC back on at the next open hour."
   },
 
-  "=================== LIVE CONFIGURATION ===================": "Edit the active schedule states using the keywords from the list above.",
+  "=================== LIVE CONFIGURATION ===================": "Edit the active open hours and the target sleep state below.",
 
   "schedule": {
-    "1": { "day": "Monday",    "off_time": "22:00", "on_time": "07:00", "state": "suspend" },
-    "2": { "day": "Tuesday",   "off_time": "22:00", "on_time": "07:00", "state": "suspend" },
-    "3": { "day": "Wednesday", "off_time": "12:00", "on_time": "14:00", "state": "suspend" },
-    "4": { "day": "Thursday",  "off_time": "22:00", "on_time": "07:00", "state": "suspend" },
-    "5": { "day": "Friday",    "off_time": "22:00", "on_time": "07:00", "state": "screen-off" },
-    "6": { "day": "Saturday",  "off_time": "18:00", "on_time": "10:00", "state": "hibernate" },
-    "7": { "day": "Sunday",    "off_time": "00:00", "on_time": "00:00", "state": "awake" }
+    "1": { "day": "Monday",    "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
+    "2": { "day": "Tuesday",   "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
+    "3": { "day": "Wednesday", "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
+    "4": { "day": "Thursday",  "open_time": "09:00", "close_time": "13:00", "state": "suspend" },
+    "5": { "day": "Friday",    "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
+    "6": { "day": "Saturday",  "open_time": "00:00", "close_time": "00:00", "state": "suspend" },
+    "7": { "day": "Sunday",    "open_time": "00:00", "close_time": "00:00", "state": "suspend" }
   }
 }

@@ -11,17 +11,10 @@ def to_mins(time_str):
     h, m = map(int, time_str.split(':'))
     return h * 60 + m
 
-def get_epoch_for_time(target_time_str, relative_to_days=0):
-    target_date = datetime.now() + timedelta(days=relative_to_days)
-    h, m = map(int, target_time_str.split(':'))
-    target_datetime = target_date.replace(hour=h, minute=m, second=0, microsecond=0)
-    return int(target_datetime.timestamp())
-
-print("[+] Kiosk Smart Power Scheduler Started.")
+print("[+] Kiosk Operational Hours Power Scheduler Started.")
 
 while True:
     if not os.path.exists(CONFIG_PATH):
-        print(f"[!] Warning: Configuration file missing at {CONFIG_PATH}. Retrying in 10s...")
         time.sleep(10)
         continue
 
@@ -29,82 +22,74 @@ while True:
         with open(CONFIG_PATH, 'r') as f:
             config = json.load(f)
     except Exception as e:
-        print(f"[!] Error parsing JSON configuration: {e}. Retrying in 10s...")
+        print(f"[!] JSON Error: {e}")
         time.sleep(10)
         continue
 
-    # Get current time information
     now = datetime.now()
-    current_day = str(now.isoweekday())  # "1" = Monday, "7" = Sunday
-    yesterday_day = str(1 if now.isoweekday() == 1 else now.isoweekday() - 1)
     current_mins = now.hour * 60 + now.minute
-
-    today_rule = config["schedule"].get(current_day)
-    yesterday_rule = config["schedule"].get(yesterday_day)
-
+    today_num = now.isoweekday() # 1 = Monday, 7 = Sunday
+    
+    today_rule = config["schedule"][str(today_num)]
+    is_closed_today = (today_rule["open_time"] == today_rule["close_time"])
+    
     should_sleep = False
-    target_state = "awake"
-    wake_epoch = None
-
-    # 1. Evaluate Today's Rule Window
-    if today_rule and today_rule["state"] != "awake":
-        off_m = to_mins(today_rule["off_time"])
-        on_m = to_mins(today_rule["on_time"])
-
-        if off_m < on_m:  # Same-day window
-            if off_m <= current_mins < on_m:
-                should_sleep = True
-                target_state = today_rule["state"]
-                wake_epoch = get_epoch_for_time(today_rule["on_time"], 0)
-        else:  # Overnight window crossing midnight
-            if current_mins >= off_m:
-                should_sleep = True
-                target_state = today_rule["state"]
-                wake_epoch = get_epoch_for_time(today_rule["on_time"], 1)
-
-    # 2. Evaluate Yesterday's Rule Window (Post-midnight holdover check)
-    if not should_sleep and yesterday_rule and yesterday_rule["state"] != "awake":
-        off_m = to_mins(yesterday_rule["off_time"])
-        on_m = to_mins(yesterday_rule["on_time"])
-
-        if off_m > on_m:  # Yesterday had an overnight window
-            if current_mins < on_m:
-                should_sleep = True
-                target_state = yesterday_rule["state"]
-                wake_epoch = get_epoch_for_time(yesterday_rule["on_time"], 0)
-
-# 3. Enforce the Active Power State
-    if should_sleep:
-        # Action A: Just blank the monitor backlight
-        if target_state == "screen-off":
-            print("[!] Active Window: Display Blanking Enabled. Ensuring display is powered down.")
-            subprocess.run("vbetool dpms off", shell=True)
-            
-        # Action B: Put the core system hardware to sleep or turn off completely
-        elif target_state in ["suspend", "hibernate", "hybrid-sleep", "off"]:
-            current_epoch = int(time.time())
-            if wake_epoch and wake_epoch > current_epoch:
-                
-                # --- TRANSLATION MATRIX FOR RTCWAKE ---
-                # Maps clean human words to low-level Linux kernel keywords
-                rtcwake_modes = {
-                    "suspend": "mem",
-                    "hibernate": "disk",
-                    "hybrid-sleep": "hybrid",
-                    "off": "off"
-                }
-                rtc_mode = rtcwake_modes.get(target_state, "mem")
-                # --------------------------------------
-
-                print(f"[!] Active Window: State '{target_state}' Enforced. Sleeping via rtcwake ({rtc_mode}) until {datetime.fromtimestamp(wake_epoch)}")
-                time.sleep(3) # Let logs flush cleanly
-                
-                # Passes the translated keyword ("mem", "disk", etc.) straight into rtcwake
-                subprocess.run(f"rtcwake -m {rtc_mode} -t {wake_epoch}", shell=True)
-                print("[+] System woke up naturally or was manually interrupted. Re-evaluating schedule...")
+    target_state = today_rule["state"]
+    
+    # Check if we should be awake right now
+    if is_closed_today:
+        should_sleep = True
     else:
-        # Outside of a sleep window: ensure the display power is restored
+        open_mins = to_mins(today_rule["open_time"])
+        close_mins = to_mins(today_rule["close_time"])
+        if open_mins <= current_mins < close_mins:
+            should_sleep = False # We are within open hours!
+        else:
+            should_sleep = True
+
+    if should_sleep:
+        wake_datetime = None
+        
+        # Lookahead Engine: Scan up to 7 days in advance to find the next opening target
+        for days_ahead in range(0, 8):
+            check_date = now + timedelta(days=days_ahead)
+            check_day_num = check_date.isoweekday()
+            rule = config["schedule"][str(check_day_num)]
+            
+            # If the lookahead day is closed all day, skip it entirely
+            if rule["open_time"] == rule["close_time"]:
+                continue
+                
+            open_mins = to_mins(rule["open_time"])
+            
+            if days_ahead == 0:
+                # If checking today, ensure we haven't already passed the opening time
+                if current_mins < open_mins:
+                    h, m = map(int, rule["open_time"].split(':'))
+                    wake_datetime = check_date.replace(hour=h, minute=m, second=0, microsecond=0)
+                    break
+            else:
+                # The first future day that is open becomes our target
+                h, m = map(int, rule["open_time"].split(':'))
+                wake_datetime = check_date.replace(hour=h, minute=m, second=0, microsecond=0)
+                break
+
+        if wake_datetime:
+            wake_epoch = int(wake_datetime.timestamp())
+            
+            if target_state == "screen-off":
+                print(f"[!] Closed. Blanking screen until {wake_datetime}")
+                subprocess.run("vbetool dpms off", shell=True)
+            elif target_state in ["suspend", "hibernate", "hybrid-sleep", "off"]:
+                rtcwake_modes = {"suspend": "mem", "hibernate": "disk", "hybrid-sleep": "hybrid", "off": "off"}
+                rtc_mode = rtcwake_modes.get(target_state, "mem")
+                
+                print(f"[!] Closed. Engaging hardware '{target_state}' state. Alarm set for {wake_datetime}")
+                time.sleep(3) # Log flush buffer
+                subprocess.run(f"rtcwake -m {rtc_mode} -t {wake_epoch}", shell=True)
+                print("[+] System emerged from sleep. Re-evaluating calendar...")
+    else:
+        # Open hours: Ensure display backlight is actively powered on
         subprocess.run("vbetool dpms on", shell=True)
 
-    # Check the schedule files once every minute
     time.sleep(60)

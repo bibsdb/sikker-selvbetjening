@@ -12,7 +12,8 @@ dnf5 install -y \
     libreoffice-langpack-da \
 	ansible \
 	grubby \
-	zenity
+	zenity \
+	kexec-tools
 # Use a COPR Example:
 # dnf5 -y copr enable ublue-os/staging
 # dnf5 -y install package
@@ -27,8 +28,9 @@ dnf5 install -y \
 # libreoffice: office suite
 # libreoffice-langpack-da: Danish language support for LibreOffice
 # ansible: configuration management and provisioning
-# zenity: dialog boxes for shell scripts
 # grubby: tool for managing bootloader configuration
+# zenity: dialog boxes for shell scripts
+# kexec-tools: allows rebooting into a new kernel without going through the full hardware reboot process, used for quicker reboot
 
 # Clean up package manager cache to reduce image size
 dnf clean all
