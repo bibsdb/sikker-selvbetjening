@@ -35,6 +35,7 @@ RUN chmod 755 /usr/libexec/*.sh
 
 # Enable systemd (root) services
 RUN systemctl enable sikker-reset-bruger-home.service
+RUN systemctl enable hide-grub.service
 
 # Enable user services 
 RUN systemctl --global enable usb-monitor.service
@@ -60,12 +61,6 @@ RUN mkdir -p /etc/systemd/system/multi-user.target.wants/ && \
 # Drop systemd shutdown wait times from 90 seconds to 3 seconds
 RUN mkdir -p /etc/systemd/system.conf.d/ && \
     echo -e "[Manager]\nDefaultTimeoutStopSec=3s\nDefaultTimeoutAbortSec=3s" > /etc/systemd/system.conf.d/kiosk-timeout.conf
-
-# 1. Grant the 'kiosk' user permission to run kexec without a password (for faster shutdown/reboot)
-# 2. Secure the file permissions (Sudo will ignore this file if it is not set to 0440)
-RUN mkdir -p /etc/sudoers.d/ && \
-    echo "kiosk ALL=(ALL) NOPASSWD: /usr/bin/systemctl kexec" > /etc/sudoers.d/kiosk-kexec && \
-    chmod 0440 /etc/sudoers.d/kiosk-kexec
 
 # Update dconf database with new configurations
 RUN dconf update

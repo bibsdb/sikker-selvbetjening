@@ -15,9 +15,9 @@
     "1": { "day": "Monday",    "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
     "2": { "day": "Tuesday",   "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
     "3": { "day": "Wednesday", "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
-    "4": { "day": "Thursday",  "open_time": "09:30", "close_time": "13:00", "state": "suspend" },
-    "5": { "day": "Friday",    "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
-    "6": { "day": "Saturday",  "open_time": "00:00", "close_time": "00:00", "state": "suspend" },
-    "7": { "day": "Sunday",    "open_time": "00:00", "close_time": "00:00", "state": "suspend" }
+    "4": { "day": "Thursday",  "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
+    "5": { "day": "Friday",    "open_time": "08:00", "close_time": "13:00", "state": "off" },
+    "6": { "day": "Saturday",  "open_time": "00:00", "close_time": "00:00", "state": "off" },
+    "7": { "day": "Sunday",    "open_time": "00:00", "close_time": "00:00", "state": "off" }
   }
 }

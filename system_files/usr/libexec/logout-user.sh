@@ -8,6 +8,7 @@ CANCEL_LABEL="Nej, Arbejd videre"
 
 echo "[+] Kiosk Manual Logout Triggered."
 
+# Launch the interactive Zenity question dialog box
 zenity --question \
        --title="$LOGOUT_TITLE" \
        --text="$LOGOUT_MESSAGE" \
@@ -16,12 +17,12 @@ zenity --question \
        --width=420 \
        --modal
 
+# Capture Zenity's exit status (0 = User clicked OK, 1 = User clicked Cancel/Closed window)
 RESPONSE=$?
 
 if [ "$RESPONSE" -eq 0 ]; then
-    echo "[!] User confirmed logout. Executing secure kexec fast reboot..."
-    # UPDATED: Replaced standard reboot with passwordless sudo kexec
-    sudo /usr/bin/systemctl kexec
+    echo "[!] User confirmed logout. Executing secure reboot without authentication..."
+    /usr/bin/systemctl reboot
 else
     echo "[~] Logout canceled by user. Returning to session."
     exit 0
