@@ -51,6 +51,11 @@ RUN chmod +x /usr/libexec/power-scheduler.py
 RUN mkdir -p /etc/systemd/system/multi-user.target.wants/ && \
     ln -s /etc/systemd/system/power-scheduler.service /etc/systemd/system/multi-user.target.wants/power-scheduler.service
 
+# Grant passwordless execution for both standard and forced reboot commands
+RUN mkdir -p /etc/sudoers.d/ && \
+    echo "kiosk ALL=(ALL) NOPASSWD: /usr/bin/systemctl reboot, /usr/bin/systemctl reboot -f, /bin/systemctl reboot, /bin/systemctl reboot -f" > /etc/sudoers.d/99-kiosk && \
+    chmod 0440 /etc/sudoers.d/99-kiosk
+
 # Update dconf database with new configurations
 RUN dconf update
 

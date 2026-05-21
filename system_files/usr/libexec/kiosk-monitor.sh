@@ -77,7 +77,7 @@ while true; do
                 echo "[+] User confirmed presence. Resetting idle tracker."
             else
                 echo "[-] Timeout reached or dialog closed ($RESPONSE). Executing secure reboot..."
-                /usr/bin/systemctl reboot -f
+                sudo /usr/bin/systemctl reboot -f
             fi
         fi
     fi
