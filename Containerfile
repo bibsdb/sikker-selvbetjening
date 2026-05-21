@@ -35,17 +35,10 @@ RUN chmod 755 /usr/libexec/*.sh
 
 # Enable systemd (root) services
 RUN systemctl enable sikker-reset-bruger-home.service
-RUN systemctl enable hide-grub.service
 
 # Enable user services 
 RUN systemctl --global enable usb-monitor.service
 RUN systemctl --global enable kiosk-monitor.service
-
-# Create the bootc kargs directory and write the parameters out to a TOML file
-# for a quieter boot experience and to hide systemd status messages
-RUN mkdir -p /usr/lib/bootc/kargs.d && \
-    echo 'kargs = ["quiet", "splash", "loglevel=3", "rd.systemd.show_status=false", "systemd.show_status=false"]' \
-    > /usr/lib/bootc/kargs.d/10-quiet-boot.toml
 
 # make sure timezone is set to Copenhagen
 RUN ln -sf /usr/share/zoneinfo/Europe/Copenhagen /etc/localtime && \
@@ -57,10 +50,6 @@ RUN chmod +x /usr/libexec/power-scheduler.py
 # MANUALLY ENABLE THE SERVICE (Bypasses systemd container build bugs)
 RUN mkdir -p /etc/systemd/system/multi-user.target.wants/ && \
     ln -s /etc/systemd/system/power-scheduler.service /etc/systemd/system/multi-user.target.wants/power-scheduler.service
-
-# Drop systemd shutdown wait times from 90 seconds to 3 seconds
-RUN mkdir -p /etc/systemd/system.conf.d/ && \
-    echo -e "[Manager]\nDefaultTimeoutStopSec=3s\nDefaultTimeoutAbortSec=3s" > /etc/systemd/system.conf.d/kiosk-timeout.conf
 
 # Update dconf database with new configurations
 RUN dconf update
