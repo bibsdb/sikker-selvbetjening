@@ -1,66 +1,14 @@
-# settings copied from dconf dump after editing on test pc
-# to find more, run gsettings --help
+# using the same schema twice, will overwrite the former, so use arrays if necessary
+# arrays must not have any white space
 
 # dash-to-panel (windows-like taskbar)
+# apps-menu (windows-like start menu)
 [org/gnome/shell]
-enabled-extensions=['dash-to-panel@jderose9.github.com']
+enabled-extensions=['dash-to-panel@jderose9.github.com','apps-menu@gnome-shell-extensions.gcampax.github.com']
 
-# Applications menu (user friendly overview replacement)
-[org/gnome/shell]
-enabled-extensions=['apps-menu@gnome-shell-extensions.gcampax.github.com']
-
-# window buttons
-[org/gnome/desktop/wm/preferences]
-button-layout='appmenu:minimize,maximize,close'
-
-# accessibility
-[org/gnome/desktop/a11y]
-always-show-universal-access-status=true
-
-# calendar
-[org/gnome/desktop/calendar]
-show-weekdate=true
-
-# interface
-[org/gnome/desktop/interface]
-clock-show-weekday=true
-enable-hot-corners=false
-toolkit-accessibility=true
-
-# control
-[org/gnome/desktop/lockdown]
-disable-command-line=true
-disable-lock-screen=true
-disable-log-out=true
-disable-save-to-disk=true
-disable-show-password=true
-disable-user-switching=true
-user-administration-disabled=true
-
-# notifications
-[org/gnome/desktop/notifications]
-show-banners=false
-show-in-lock-screen=false
-
-# numlock
-[org/gnome/desktop/peripherals/keyboard]
-numlock-state=true
-
-# privacy
-[org/gnome/desktop/privacy]
-remember-app-usage=false
-report-technical-problems=false
-show-full-name-in-top-bar=false
-
-# AFK
-[org/gnome/desktop/screensaver]
-idle-activation-enabled=false
-lock-enabled=false
-show-full-name-in-top-bar=false
-status-message-enabled=false
-user-switch-enabled=false
-
-# login authentication
-[org/gnome/login-screen]
-enable-fingerprint-authentication=false
-enable-smartcard-authentication=false
+# settings for dash-to-panel (taskbar)
+[org/gnome/shell/extensions/dash-to-panel]
+group-apps=false
+show-running-apps=true
+overview-click-to-exit=true
+hide-overview-on-startup=true

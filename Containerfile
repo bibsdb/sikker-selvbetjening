@@ -27,8 +27,41 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/build_files/build.sh
 
+# Copy system files (config, services, scripts) into the image
+COPY --from=ctx /system_files/ /
+
+# Make libexec scripts executable
+RUN chmod 755 /usr/libexec/*.sh
+
+# Enable systemd (root) services
+RUN systemctl enable sikker-reset-bruger-home.service
+
+# Enable user services 
+RUN systemctl --global enable usb-monitor.service
+RUN systemctl --global enable kiosk-monitor.service
+
+# make sure timezone is set to Copenhagen
+RUN ln -sf /usr/share/zoneinfo/Europe/Copenhagen /etc/localtime && \
+    echo "Europe/Copenhagen" > /etc/timezone
+
+# Set execution permissions
+RUN chmod +x /usr/libexec/power-scheduler.py
+
+# MANUALLY ENABLE THE SERVICE (Bypasses systemd container build bugs)
+RUN mkdir -p /etc/systemd/system/multi-user.target.wants/ && \
+    ln -s /etc/systemd/system/power-scheduler.service /etc/systemd/system/multi-user.target.wants/power-scheduler.service
+
+# Grant passwordless execution for both standard and forced reboot commands
+RUN mkdir -p /etc/sudoers.d/ && \
+    echo "kiosk ALL=(ALL) NOPASSWD: /usr/bin/systemctl reboot, /usr/bin/systemctl reboot -f, /bin/systemctl reboot, /bin/systemctl reboot -f" > /etc/sudoers.d/99-kiosk && \
+    chmod 0440 /etc/sudoers.d/99-kiosk
+
+# Update dconf database with new configurations
+RUN dconf update
+
 # Ship schema files for runtime consumers.
 COPY --from=ctx /system_files/usr/share/sikker-selvbetjening/schemas /usr/share/sikker-selvbetjening/schemas
+
     
 ### LINTING
 ## Verify final image and contents are correct.

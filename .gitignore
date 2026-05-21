@@ -1,5 +1,7 @@
 _build_*
 output
+bootiso
+ToDo.txt
 _build-*/**
 __pycache__/
 *.py[cod]

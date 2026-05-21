@@ -1,0 +1,16 @@
+{"timestamp":4330429,"category":"session_restore","name":"backup_can_be_loaded_session_file","extra":{"glean_timestamp":"1778057235394","can_load":"true","loadfail_reason":"N/A","path_key":"clean"}}
+{"timestamp":4330429,"category":"session_restore","name":"backup_can_be_loaded_session_file","extra":{"path_key":"clean","glean_timestamp":"1778057235394","loadfail_reason":"N/A","can_load":"true"}}
+{"timestamp":4330429,"category":"session_restore","name":"shutdown_success_session_startup","extra":{"shutdown_reason":"N/A","shutdown_ok":"false","glean_timestamp":"1778057235394"}}
+{"timestamp":4330972,"category":"webcompatreporting","name":"reason_dropdown","extra":{"setting":"required","glean_timestamp":"1778057235936"}}
+{"timestamp":4331441,"category":"nimbus_events","name":"startup_database_consistency","extra":{"store_active_count":"32","trigger":"startup","db_active_count":"32","total_store_count":"32","primary":"database","total_db_count":"32","glean_timestamp":"1778057236406"}}
+{"timestamp":4331554,"category":"jsonfile","name":"load_autofillprofiles","extra":{"glean_timestamp":"1778057236519","value":"error_notfounderror"}}
+{"timestamp":4331682,"category":"doh","name":"state_rollback","extra":{"glean_timestamp":"1778057236646","value":"null"}}
+{"timestamp":4332462,"category":"normandy","name":"enroll_failed_nimbus_experiment","extra":{"value":"expand-vertical-tabs-callout-existing-profiles","reason":"feature-conflict","glean_timestamp":"1778057237427"}}
+{"timestamp":4332462,"category":"nimbus_events","name":"enroll_failed","extra":{"reason":"feature-conflict","glean_timestamp":"1778057237427","experiment":"expand-vertical-tabs-callout-existing-profiles"}}
+{"timestamp":4332591,"category":"nimbus_events","name":"is_ready","extra":{"glean_timestamp":"1778057237556"}}
+{"timestamp":4332688,"category":"containers","name":"container_profile_loaded","extra":{"glean_timestamp":"1778057237653","containers":"4"}}
+{"timestamp":4333006,"category":"jsonfile","name":"load_logins","extra":{"glean_timestamp":"1778057237970","value":"error_notfounderror"}}
+{"timestamp":4333015,"category":"upgrade_dialog","name":"trigger_reason","extra":{"value":"not-major","glean_timestamp":"1778057237980"}}
+{"timestamp":4336308,"category":"normandy","name":"expose_nimbus_experiment","extra":{"featureId":"newtabTrainhopAddon","value":"new-tab-151320260419192959-to-release-150","glean_timestamp":"1778057241272","branchSlug":"rollout"}}
+{"timestamp":4336308,"category":"nimbus_events","name":"exposure","extra":{"feature_id":"newtabTrainhopAddon","branch":"rollout","experiment":"new-tab-151320260419192959-to-release-150","glean_timestamp":"1778057241272"}}
+{"timestamp":4338145,"category":"doh","name":"state_shutdown","extra":{"value":"null","glean_timestamp":"1778057243109"}}

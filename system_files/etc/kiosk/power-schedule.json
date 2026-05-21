@@ -1,0 +1,23 @@
+{
+  "_README_FIRST": "This file tracks the library's OPEN hours. If open_time and close_time are identical, the kiosk remains closed all day and stays asleep.",
+
+  "__HELP_VALID_STATES__": {
+    "screen-off":   "PC stays on (accessible via SSH), but the monitor backlight turns completely off during closed hours.",
+    "suspend":      "Sleep to RAM. Super fast wake-up, drops machine into a very low-power state during closed hours.",
+    "hibernate":    "Sleep to Disk. Zero power drain. Requires Linux swap space.",
+    "hybrid-sleep": "Saves state to disk AND sleeps to RAM.",
+    "off":          "Complete hardware shutdown. Motherboard RTC timer will physically turn the PC back on at the next open hour."
+  },
+
+  "=================== LIVE CONFIGURATION ===================": "Edit the active open hours and the target sleep state below.",
+
+  "schedule": {
+    "1": { "day": "Monday",    "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
+    "2": { "day": "Tuesday",   "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
+    "3": { "day": "Wednesday", "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
+    "4": { "day": "Thursday",  "open_time": "08:00", "close_time": "13:00", "state": "suspend" },
+    "5": { "day": "Friday",    "open_time": "08:00", "close_time": "13:00", "state": "off" },
+    "6": { "day": "Saturday",  "open_time": "00:00", "close_time": "00:00", "state": "off" },
+    "7": { "day": "Sunday",    "open_time": "00:00", "close_time": "00:00", "state": "off" }
+  }
+}

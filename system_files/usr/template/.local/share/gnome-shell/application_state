@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<application-state>
+  <context id="">
+    <application id="org.gnome.Ptyxis.desktop" score="110" last-seen="1778051095"/>
+    <application id="org.gnome.Nautilus.desktop" score="27" last-seen="1778051121"/>
+    <application id="libreoffice-writer.desktop" score="0" last-seen="1777976019"/>
+    <application id="org.gnome.Settings.desktop" score="4" last-seen="1778050836"/>
+    <application id="libreoffice-startcenter.desktop" score="1" last-seen="1778050635"/>
+  </context>
+</application-state>

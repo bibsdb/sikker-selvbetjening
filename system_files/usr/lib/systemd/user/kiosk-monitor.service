@@ -1,0 +1,15 @@
+[Unit]
+Description=Kiosk Data Protection Monitor
+# Ensure the graphical desktop is fully loaded before this starts
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/libexec/kiosk-monitor.sh
+# Automatically restart the script if it crashes
+Restart=always
+RestartSec=3
+
+[Install]
+# Tie the service to the graphical session lifespan
+WantedBy=graphical-session.target

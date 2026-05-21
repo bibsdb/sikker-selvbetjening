@@ -12,3 +12,5 @@ echo "superuser:superuser" | chpasswd
 # Allow sudo with password required
 echo "superuser ALL=(ALL) ALL" >> /etc/sudoers.d/superuser
 chmod 0440 /etc/sudoers.d/superuser
+
+# citizen user will be created on every boot by /usr/libexec/sikker-reset-bruger-home
